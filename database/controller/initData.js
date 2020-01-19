@@ -6,6 +6,10 @@ const user = require('../model/user');
 // 注册管理员用户
 router.get('/', async (req, res, next) => {
 	try {
+    let isFirstInit = await user.findOne({username: 'admin'});
+    if (isFirstInit) {
+      res.json({ msg: '不可重复始化过数据' });
+    }
     let addAdminUser = await user.create({
       username: 'admin',
       userNum: 'admin',
@@ -17,7 +21,7 @@ router.get('/', async (req, res, next) => {
       sex: 1,
       faculty: '01',
       major: '0101'
-  })
+    })
     // 测试批量添加学生
     let addUser = await user.insertMany([
       {
