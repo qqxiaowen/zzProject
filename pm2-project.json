@@ -1,0 +1,15 @@
+{
+  "apps" : [{
+    "name" : "zz-project",  
+    "script": "./bin/www", 
+    "cwd": "./",          
+    "watch":[
+      "bin",
+      "database",
+      "routes"
+    ],
+    "error_file":"./logs/app-err.log",
+    "out_file":"./logs/app-out.log",
+    "log_date_format":"YYYY-MM-DD HH:mm Z"
+    }]
+}
