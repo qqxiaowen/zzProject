@@ -9,7 +9,7 @@ const auth = require('./auth');
 // 注册管理员用户
 router.post('/addAdminUser', adminAuth, async (req, res, next) => {
 	try {
-		let { username, userNum, password, desc, sex, avatar, faculty, major } = req.body;
+		let { username, userNum, password, desc, sex, avatar, faculty, major, jobName = '管理员' } = req.body;
 
 		let findData = await user.findOne({ userNum });
 		if (!username || !password || !userNum) {
@@ -25,7 +25,7 @@ router.post('/addAdminUser', adminAuth, async (req, res, next) => {
 				let avatarNumber = Math.floor(Math.random() * 9);
 				avatar = `http://public.mawenli.com/avatar${avatarNumber}.png`;
 			}
-			let data = await user.create({ username, userNum, password, desc, sex, avatar, faculty, major, isAdministrator: true, jobName: '管理员' });
+			let data = await user.create({ username, userNum, password, desc, sex, avatar, faculty, major, isAdministrator: true, jobName });
 			res.json({
 				code: 0,
 				msg: '添加用户成功',
@@ -40,7 +40,7 @@ router.post('/addAdminUser', adminAuth, async (req, res, next) => {
 // 注册普通用户
 router.post('/addUser', async (req, res, next) => {
 	try {
-		let { username, userNum, password, desc, sex, avatar, faculty, major } = req.body;
+		let { username, userNum, password, desc, sex, avatar, faculty, major, jobName = '普通用户' } = req.body;
 
 		let findData = await user.findOne({ userNum });
 		if (!username || !password || !userNum) {
@@ -56,7 +56,7 @@ router.post('/addUser', async (req, res, next) => {
 				let avatarNumber = Math.floor(Math.random() * 9);
 				avatar = `http://public.mawenli.com/avatar${avatarNumber}.png`;
 			}
-			let data = await user.create({ username, userNum, password, desc, sex, avatar, faculty, major });
+			let data = await user.create({ username, userNum, password, desc, sex, avatar, faculty, major, jobName });
 			res.json({
 				code: 0,
 				msg: '添加用户成功',
