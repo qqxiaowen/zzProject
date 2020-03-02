@@ -10,6 +10,16 @@ const MongoStore = require('connect-mongo')(session);
 
 const app = express();
 
+// 跨域设置
+app.all('*', function(req, res, next) {
+    res.header('Access-Control-Allow-Credentials', 'true');
+    console.log('-- ', req.headers, req.headers.origin)
+    res.header('Access-Control-Allow-Origin', req.headers.origin);
+    res.header('Access-Control-Allow-Methods', 'DELETE, PUT, POST, GET, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, username');
+    next();
+});
+
 app.use(session({
     secret: ' xiao ', //设置加盐
     resave: false, //是否重新保存session
