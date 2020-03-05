@@ -29,9 +29,20 @@ fetch('http://localhost:3000/user/login', {
     headers: {
     'content-type': 'application/json;charset=UTF-8'
     },
+    body: JSON.stringify({
+    // userNum: 'admin',
+    // password: '1314love',
+    desc: 'desc',
+    jobName: '学生',
+    username: '修改',
+    avatar: '11',
+    sex: '1',
+    faculty: '110',
+    major: '11011'
+  }),
     cache: 'no-cache',
     credentials: 'include',
-    method: 'GET'
+    method: 'PUT'
   })
 })
 </script>
