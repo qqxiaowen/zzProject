@@ -86,6 +86,14 @@ router.get('/userList', adminAuth, async (req, res, next) => {
 		let data = await user.find(reqData)
 			.skip((pn - 1) * size)
 			.limit(size)
+			.populate({
+				path: 'faculty',
+				select: 'facultyName'
+			})
+			.populate({
+				path: 'major',
+				select: 'majorName'
+			})
 			.select('-password');
 		let count = await user.count(reqData);
 		res.json({
@@ -108,7 +116,16 @@ router.get('/userDetail', adminAuth, async (req, res, next) => {
 			res.json({ msg: '缺乏id参数' });
 		}
 
-		let data = await user.findById({ _id: id }).select('-password');
+		let data = await user.findById({ _id: id })
+		.populate({
+			path: 'faculty',
+			select: 'facultyName'
+		})
+		.populate({
+			path: 'major',
+			select: 'majorName'
+		})
+		.select('-password');
 		if (data) {
 			res.json({
 				code: 0,

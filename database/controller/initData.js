@@ -19,8 +19,6 @@ router.get('/', async (req, res, next) => {
       jobName: '管理员',
       avatar: 'http://public.mawenli.xyz/avatar0.png',
       sex: 1,
-      faculty: '01',
-      major: '0101'
     })
     // 测试批量添加学生
     let addUser = await user.insertMany([
@@ -31,8 +29,6 @@ router.get('/', async (req, res, next) => {
         desc: '这是第1个普通用户',
         avatar: 'http://public.mawenli.xyz/avatar1.png',
         sex: 1,
-        faculty: '10',
-        major: '1001'
       },
       {
         username: '用户2',
@@ -41,8 +37,6 @@ router.get('/', async (req, res, next) => {
         desc: '这是第2个普通用户',
         avatar: 'http://public.mawenli.xyz/avatar1.png',
         sex: 1,
-        faculty: '10',
-        major: '1002'
       },
       {
         username: '用户3',
@@ -51,8 +45,6 @@ router.get('/', async (req, res, next) => {
         desc: '这是第3个普通用户',
         avatar: 'http://public.mawenli.xyz/avatar1.png',
         sex: 1,
-        faculty: '10',
-        major: '1003'
       },
       {
         username: '用户4',
@@ -61,8 +53,6 @@ router.get('/', async (req, res, next) => {
         desc: '这是第4个普通用户',
         avatar: 'http://public.mawenli.xyz/avatar1.png',
         sex: 1,
-        faculty: '11',
-        major: '1101'
       },
       {
         username: '用户5',
@@ -71,8 +61,6 @@ router.get('/', async (req, res, next) => {
         desc: '这是第5个普通用户',
         avatar: 'http://public.mawenli.xyz/avatar1.png',
         sex: 1,
-        faculty: '11',
-        major: '1102'
       }
     ])
     res.json({

@@ -32,7 +32,14 @@ const user = new Schema({
     default: 0
   },
   faculty: String,
-  major: String
+  faculty: {
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: 'faculty'
+  },
+  major: {
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: 'major'
+  }
 }, {
   versionKey: false,
   timestamps: {

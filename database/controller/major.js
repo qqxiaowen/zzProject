@@ -34,8 +34,8 @@ router.get('/faculty', async (req, res, next) => {
 
     let data = await major.find({faculty: id})
               .populate({
-                  path: 'faculty',
-                  select: 'facultyName'
+                path: 'faculty',
+                select: 'facultyName'
               });
     res.json({
       code: 0,
