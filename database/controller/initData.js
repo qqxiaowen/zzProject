@@ -2,13 +2,17 @@ const express = require('express');
 const router = express.Router();
 
 const user = require('../model/user');
+const faculty = require('../model/faculty');
+const major = require('../model/major');
+const category = require('../model/category');
 
-// 注册管理员用户
-router.get('/', async (req, res, next) => {
+// 批量添加学生
+router.get('/user', async (req, res, next) => {
 	try {
     let isFirstInit = await user.findOne({username: 'admin'});
     if (isFirstInit) {
       res.json({ msg: '不可重复始化过数据' });
+      return;
     }
     let addAdminUser = await user.create({
       username: 'admin',
@@ -65,7 +69,7 @@ router.get('/', async (req, res, next) => {
     ])
     res.json({
       code: 0,
-      msg: '初始化数据成功',
+      msg: '初始化用户成功',
       addAdminUser,
       addUser
     })
@@ -74,4 +78,72 @@ router.get('/', async (req, res, next) => {
 	}
 })
 
+// 批量添加院系-专业
+router.get('/facultyMajor', async(req, res, next) => {
+  try {
+    let isFirstInit = await faculty.findOne({facultyName: '信息工程学院'});
+    if (isFirstInit) {
+      res.json({ msg: '不可重复始化过数据' });
+      return;
+    }
+    let addFacaulty = await faculty.insertMany([
+      { facultyName: '信息工程学院' },
+      { facultyName: '国际学院' },
+      { facultyName: '生物工程系' },
+      { facultyName: '化学化工系' },
+      { facultyName: '体育系' },
+    ])
+    let addMajor = await major.insertMany([
+      {
+        majorName: "软件工程",
+        faculty: addFacaulty[0]._id
+      },
+      {
+        majorName: "网络工程",
+        faculty: addFacaulty[0]._id
+      },
+      {
+        majorName: "计算机科学与技术",
+        faculty: addFacaulty[0]._id
+      },
+      {
+        majorName: "软件工程",
+        faculty: addFacaulty[1]._id
+      },
+    ])
+
+    res.json({
+      code: 0,
+      msg: '初始化院系专业成功',
+      addFacaulty,
+      addMajor
+    })
+  } catch(err) {
+    next(err);
+  }
+})
+
+// 批量添加类目
+router.get('/category', async(req, res, next) => {
+  try {
+    let isFirstInit = await category.findOne({categoryName: '专利'});
+    if (isFirstInit) {
+      res.json({ msg: '不可重复始化过数据' });
+      return;
+    }
+    let addCategory = await category.insertMany([
+      { categoryName: '专利' },
+      { categoryName: '著作' },
+      { categoryName: '项目' },
+      { categoryName: '软件' },
+    ])
+    res.json({
+      code: 0,
+      msg: '初始化类目信息成功',
+      addCategory
+    })
+  } catch(err) {
+    next(err);
+  }
+})
 module.exports = router;
