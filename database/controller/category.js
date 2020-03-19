@@ -19,7 +19,7 @@ router.get('/', async (req, res, next) => {
 })
 
 // 获取单个类别信息
-router.get('/faculyDetail', async (req, res, next) => {
+router.get('/categoryDetail', async (req, res, next) => {
   try {
     let { id } = req.query;
 		if (!id) {
