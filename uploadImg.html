@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <input id="upload" type="file">
+    <div class="text">
+    </div>
+</body>
+<script>
+    var token = null; // 上传文件token
+
+    // 获取token
+    function getToken() {
+        fetch('http://upload.mawenli.com', {
+            method: 'GET'
+        })
+        .then(response => response.json())
+        .then(res => {
+            if (res.code === 0) {
+                token = res.token;
+            }
+        })
+    }
+
+    // 文件上传验证
+    function handleBeforeUpload (file) {
+        const fileSuffix = file.name.substring(file.name.lastIndexOf('.') + 1);
+        const fileSuffixCheck = fileSuffix === 'png' || fileSuffix === 'jpg' || fileSuffix === 'jpeg';
+        let fileTypeCheck = file.type === 'image/jpeg' || file.type === 'image/png';
+        if (!fileSuffixCheck || !fileTypeCheck) {
+            alert('只允许上传JPG/PNG文件！');
+            return false;
+        }
+        
+        const isLt2M = file.size / 1024 / 1024 < 5;
+        if (!isLt2M) {
+            alert('文件上传需小于5M!');
+            return false;
+        }
+        return true;
+    }
+    
+    // 上传七牛
+    function handleUploadQiNiu(file) {
+        // console.log(file);
+        var formData = new FormData();
+        formData.append('file', file);
+        formData.append('token', token);
+
+        fetch('http://upload-z1.qiniup.com', {
+            method: 'POST',
+            // headers: {
+            //     'content-type': 'multipart/form-data',
+            // },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(res => {
+            console.log(res)
+        })
+        .catch(err => {
+            alert('上传失败' + err);
+        })
+    }
+
+    getToken(); // 获取token
+    
+    document.querySelector('#upload').onchange = function(e) {
+        var file = e.target.files[0];
+        if (handleBeforeUpload(file)) {
+            handleUploadQiNiu(file);
+        }
+    }
+</script>
+</html>

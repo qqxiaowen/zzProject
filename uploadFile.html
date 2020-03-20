@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+
+<body>
+  <input id="upload" type="file">
+</body>
+<script>
+  var testFileType = ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'application/vnd.ms-powerpoint', 'application/pdf',
+    'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+  ];
+
+  // 登录
+  function login() {
+    fetch('http://localhost:3000/user/login', {
+      body: JSON.stringify({
+        userNum: 'admin',
+        password: '123456'
+      }),
+      headers: {
+        'content-type': 'application/json;charset=UTF-8'
+      },
+      cache: 'no-cache',
+      credentials: 'include',
+      method: 'POST'
+    })
+    .then(res => res.json())
+    .then(data => {
+      console.log(data);
+    })
+  }
+
+  // 文件上传验证
+  function handleBeforeUpload(file) {
+    console.log('file: ', file);
+    for (var i = 0; i < testFileType.length; i++) {
+      if (file.type == testFileType[i]) {
+        return true;
+      }
+    }
+  }
+
+  // 上传文件
+  function handleUpload(file) {
+    var formData = new FormData();
+    formData.append('file', file);
+    // formData.append('key', dislodgeRandomStr(file.name));
+    // formData.append('token', token);
+
+    fetch('http://localhost:3000/upload', {
+      body: formData,
+      cache: 'no-cache', // 是否缓存
+      credentials: 'include', // 携带cookie
+      method: 'POST'
+      })
+      .then(response => response.json())
+      .then(res => {
+        console.log('res: ', res);
+        alert(res.filePath);
+      })
+      .catch(err => {
+        alert('上传失败' + err);
+      })
+  }
+
+  // // 生成16位防重复字符
+  // function dislodgeRandomStr(str) {
+  //   var location = str.lastIndexOf('.');
+  //   var str1 = str.substring(0, location);
+  //   var randomNum = Math.random().toString(36).slice(-8); // 8位随机字符
+  //   var dateNum = new Date().getTime().toString(36).slice(-8); // 8位时间字符
+
+  //   var username = 'Michael' // 用户名
+  //   str1 = str1 + '_' + username + dateNum + randomNum;
+  //   return str1 + str.substring(location, str.length);
+  // }
+
+  // // 去除16位重复字符
+  // function getPrimaryName(name) {
+  //   var location = name.lastIndexOf('.');
+  //   return name.substring(26, location - 16) + name.substring(location - 1, name.length);
+  // }
+
+
+  document.querySelector('#upload').onchange = function (e) {
+    var file = e.target.files[0];
+    if (handleBeforeUpload(file)) {
+      handleUpload(file);
+    } else {
+      alert('只能上传doc、docx、psd、psdx、pdf的文件');
+    }
+  }
+
+  // login();
+
+  // console.log('解：', getPrimaryName('http://upload.mawenli.com/新建.PPT.演示文稿_Michaelk0gkskoyo77ig74k.ppt'));
+  // console.log('加：', dislodgeRandomStr('新建.12345.演示文稿.pptx'))
+</script>
+
+</html>
