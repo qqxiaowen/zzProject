@@ -201,7 +201,16 @@ router.get('/myself', auth, async (req, res, next) => {
 	try {
 		let _id = req.session.user._id;
 
-		let userData = await user.findById({ _id }).select('-password');
+		let userData = await user.findById({ _id })
+		.populate({
+			path: 'faculty',
+			select: 'facultyName'
+		})
+		.populate({
+			path: 'major',
+			select: 'majorName'
+		})
+		.select('-password');
 		res.json({
 			code: 0,
 			msg: '获取个人信息成功',
@@ -268,7 +277,15 @@ router.post('/login', async (req, res, next) => {
 		let { userNum, password } = req.body;
 		if (userNum && password) {
 
-			let userData = await user.findOne({ userNum });
+			let userData = await user.findOne({ userNum })
+			.populate({
+				path: 'faculty',
+				select: 'facultyName'
+			})
+			.populate({
+				path: 'major',
+				select: 'majorName'
+			});
 			if (!userData) {
 				res.json({
 					msg: '该用户不存在',
