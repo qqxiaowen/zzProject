@@ -12,20 +12,6 @@
     </div>
 </body>
 <script>
-    var token = null; // 上传文件token
-
-    // 获取token
-    function getToken() {
-        fetch('http://upload.mawenli.com', {
-            method: 'GET'
-        })
-        .then(response => response.json())
-        .then(res => {
-            if (res.code === 0) {
-                token = res.token;
-            }
-        })
-    }
 
     // 文件上传验证
     function handleBeforeUpload (file) {
@@ -45,18 +31,15 @@
         return true;
     }
     
-    // 上传七牛
-    function handleUploadQiNiu(file) {
-        // console.log(file);
+    // 上传文件
+    function handleUpload(file) {
         var formData = new FormData();
         formData.append('file', file);
-        formData.append('token', token);
 
-        fetch('http://upload-z1.qiniup.com', {
+        fetch('http://localhost:3000/upload/uploadImg', {
             method: 'POST',
-            // headers: {
-            //     'content-type': 'multipart/form-data',
-            // },
+            cache: 'no-cache', // 是否缓存
+            credentials: 'include', // 携带cookie
             body: formData
         })
         .then(response => response.json())
@@ -68,12 +51,11 @@
         })
     }
 
-    getToken(); // 获取token
     
     document.querySelector('#upload').onchange = function(e) {
         var file = e.target.files[0];
         if (handleBeforeUpload(file)) {
-            handleUploadQiNiu(file);
+            handleUpload(file);
         }
     }
 </script>

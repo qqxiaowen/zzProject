@@ -14,6 +14,6 @@ router.use('/user', require('../database/controller/user'));
 router.use('/faculty', require('../database/controller/faculty'));
 router.use('/major', require('../database/controller/major'));
 router.use('/category', require('../database/controller/category'));
-router.use('/upload', require('../database/controller/uploadFille'));
+router.use('/upload', require('../database/controller/upload'));
 router.use('/config', require('../database/controller/facultyMajor'));
 module.exports = router;
