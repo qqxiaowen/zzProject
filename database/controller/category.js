@@ -7,7 +7,13 @@ const adminAuth = require('./adminAuth');
 // 获取所有类别信息
 router.get('/', async (req, res, next) => {
   try {
-    let data = await category.find();
+    let { isShow } = req.query;
+    let data;
+    if (isShow === true || isShow === false) {
+      data = await category.find({isShow});
+    } else {
+      data = await category.find();
+    }
     res.json({
       code: 0,
       msg: '获取所有类别信息成功',
