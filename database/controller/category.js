@@ -91,7 +91,8 @@ router.delete('/', adminAuth, async (req, res, next) => {
 			res.json({ msg: '缺乏id参数' });
 		}
 
-    await category.deleteOne({_id: id});
+    // 判断科研成果模块下是否有该类别
+    await category.updateOne({_id: id},{$set: {isShow: false}});
     res.json({
       code: 0,
       msg: '删除成功',

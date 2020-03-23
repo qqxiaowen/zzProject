@@ -6,6 +6,10 @@ const category = new Schema({
   desc: {
     type: String,
     default: '还没有添加简介哟'
+  },
+  isShow: {
+    type: Boolean,
+    default: true
   }
 },{versionKey: false, timestamps: {createdAt: 'createTime', updatedAt: 'updateTime'}})
 
