@@ -16,4 +16,6 @@ router.use('/major', require('../database/controller/major'));
 router.use('/category', require('../database/controller/category'));
 router.use('/upload', require('../database/controller/upload'));
 router.use('/config', require('../database/controller/facultyMajor'));
+router.use('/achievement', require('../database/controller/achievement'));
+router.use('/audit', require('../database/controller/audit'));
 module.exports = router;

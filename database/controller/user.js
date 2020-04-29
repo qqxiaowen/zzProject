@@ -86,6 +86,7 @@ router.get('/userList', adminAuth, async (req, res, next) => {
 		let data = await user.find(reqData)
 			.skip((pn - 1) * size)
 			.limit(size)
+      .sort({'updateTime': -1})
 			.populate({
 				path: 'faculty',
 				select: 'facultyName'
