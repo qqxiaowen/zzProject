@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require("path");
 
 router.post('/uploadFile', auth, (req, res) => {
-  let storeFileUrl = path.join(__dirname, '../../uploadFile');
+  let storeFileUrl = path.join(__dirname, '../../public/uploadFile');
   let storeFileUrlPersonage= `${storeFileUrl}/${req.session.user.userNum}`
   fs.readdir(storeFileUrl, (err, data) => { // 读取uploadFile下所有文件夹
     if (err) { console.log(err); return; }
@@ -26,14 +26,15 @@ router.post('/uploadFile', auth, (req, res) => {
     // console.log(fields, file);
     fs.rename(file.file[0].path, `${storeFileUrlPersonage}/${file.file[0].originalFilename}`, reNameErr => {
       if (reNameErr) {
-        // console.log('reNameErr: ', reNameErr);
+        res.join({
+          msg: '失败',
+          reNameErr: reNameErr
+        })
       } else {
         res.json({
-          fields,
-          file,
+          code: 0,
           err,
-          reNameErr,
-          filePath:`${storeFileUrlPersonage}/${file.file[0].originalFilename}`
+          filePath:`http://zz.mawenli.com/uploadFile/${req.session.user.userNum}/${file.file[0].originalFilename}`,
         })
       }
     })
@@ -41,7 +42,7 @@ router.post('/uploadFile', auth, (req, res) => {
 })
 
 router.post('/uploadImg', auth, (req, res) => {
-  let storeFileUrl = path.join(__dirname, '../../uploadImg');
+  let storeFileUrl = path.join(__dirname, '../../public/uploadImg');
   let storeFileUrlPersonage= `${storeFileUrl}/${req.session.user.userNum}`
   fs.readdir(storeFileUrl, (err, data) => { // 读取uploadImg下所有文件夹
     if (err) { console.log(err); return; }
@@ -59,11 +60,11 @@ router.post('/uploadImg', auth, (req, res) => {
   form.uploadDir = storeFileUrlPersonage; // 设置单文件大小
   form.maxFilesSize = 5 * 1024 * 1024; // 设置单文件大小限制 5m
   form.parse(req, function(err, fields, file){
+    let oladFilePath = file.file[0].path;
     res.json({
-      fields,
-      file,
+      code: 0,
       err,
-      filePath: file.file[0].path
+      filePath: `http://zz.mawenli.com${oladFilePath.split('public')[1]}`,
     })
   });
 })

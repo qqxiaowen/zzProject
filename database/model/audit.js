@@ -18,6 +18,10 @@ const audit = new Schema({
       type: Schema.Types.ObjectId,
       ref: 'category'
     },
+    facultyName: { // 论文院系
+      type: Schema.Types.ObjectId,
+      ref: 'faculty'
+    },
     accessoryArr: Array,
   }, // 审批内容
   auditResult: { // 审批状态

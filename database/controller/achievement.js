@@ -12,12 +12,15 @@ const auth = require('./auth');
 // 获取所有论文成果(审批后才能显示)
 router.get('/', async (req, res, next) => {
   try {
-    let { pn = 1, size = 10, category, title } = req.query;
+    let { pn = 1, size = 10, category, title, facultyName } = req.query;
     pn = parseInt(pn);
     size = parseInt(size);
     let reqData = {};
     if (category) {
       reqData = { category }
+    }
+    if (facultyName) {
+      reqData = { ...reqData, facultyName }
     }
     if (title) {
       reqData = { ...reqData, title: new RegExp(title) }
@@ -31,8 +34,16 @@ router.get('/', async (req, res, next) => {
         select: 'username userNum'
       })
       .populate({
+        path: 'lastAudit',
+        select: 'username userNum'
+      })
+      .populate({
         path: 'category',
         select: 'categoryName'
+      })
+      .populate({
+        path: 'facultyName',
+        select: 'facultyName'
       })
     res.json({
       code: 0,
@@ -47,12 +58,15 @@ router.get('/', async (req, res, next) => {
 // 获取个人所有论文成果
 router.get('/myself', auth, async (req, res, next) => {
   try {
-    let { pn = 1, size = 10, category, title } = req.query;
+    let { pn = 1, size = 10, category, title, facultyName } = req.query;
     pn = parseInt(pn);
     size = parseInt(size);
     let reqData = {};
     if (category) {
       reqData = { category }
+    }
+    if (facultyName) {
+      reqData = { ...reqData, facultyName }
     }
     if (title) {
       reqData = { ...reqData, title: new RegExp(title) }
@@ -72,6 +86,10 @@ router.get('/myself', auth, async (req, res, next) => {
       .populate({
         path: 'category',
         select: 'categoryName'
+      })
+      .populate({
+        path: 'facultyName',
+        select: 'facultyName'
       })
     res.json({
       code: 0,
@@ -96,8 +114,16 @@ router.get('/detail', async (req, res, next) => {
       select: 'username userNum'
     })
     .populate({
+      path: 'lastAudit',
+      select: 'username userNum'
+    })
+    .populate({
       path: 'category',
       select: 'categoryName'
+    })
+    .populate({
+      path: 'facultyName',
+      select: 'facultyName'
     })
     let newReadNumber = data.readNumber + 1;
     data.readNumber = newReadNumber;
@@ -115,15 +141,15 @@ router.get('/detail', async (req, res, next) => {
 // 添加论文成果
 router.post('/', auth, async (req, res, next) => {
   try {
-    let { title, content, category, accessoryArr } = req.body;
-    if (!title || !content || !category ) {
+    let { title, content, category, accessoryArr, facultyName } = req.body;
+    if (!title || !content || !category || !facultyName ) {
       res.json({
         msg: '缺乏必要参数'
       })
     } else {
       let author = req.session.user._id;
-      let data = await achievement.create({ title, content, author, category, accessoryArr, isShow: false });
-      await audit.create({ author, achievement: data._id, newData: { title, content, category, accessoryArr }});
+      let data = await achievement.create({ title, content, author, category, facultyName, accessoryArr, isShow: false });
+      await audit.create({ author, achievement: data._id, newData: { title, content, category, facultyName, accessoryArr }});
       res.json({
         code: 0,
         msg: '添加成功',
@@ -135,11 +161,11 @@ router.post('/', auth, async (req, res, next) => {
   }
 })
 
-// 修改论文成果 -- 没有测试
+// 修改论文成果
 router.put('/', auth, async (req, res, next) => {
   try {
-    const { id, title, content, category, accessoryArr } = req.body;
-    if ( !id || !title || !content || !category ) {
+    const { id, title, content, category, facultyName, accessoryArr } = req.body;
+    if ( !id || !title || !content || !category || !facultyName ) {
       res.json({
         msg: '缺乏必要参数'
       })
@@ -148,9 +174,9 @@ router.put('/', auth, async (req, res, next) => {
       let author = req.session.user._id;
       let findData = await audit.findOne({ achievement: id, auditResult: 'wait' });
       if (findData) {
-        await audit.updateOne({ _id: findData._id}, {$set: { newData: { title, content, category, accessoryArr } }});
+        await audit.updateOne({ _id: findData._id}, {$set: { newData: { title, content, category, facultyName, accessoryArr } }});
       } else {
-        await audit.create({ author, achievement: id, newData: { title, content, category, accessoryArr }});
+        await audit.create({ author, achievement: id, newData: { title, content, category, facultyName, accessoryArr }});
       }
       res.json({
         code: 0,

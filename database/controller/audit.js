@@ -28,6 +28,10 @@ router.get('/admin', adminAuth, async (req, res, next) => {
         path: 'newData.category',
         select: 'categoryName',
       })
+      .populate({
+        path: 'facultyName',
+        select: 'facultyName'
+      })
     res.json({
       code: 0,
       msg: '获取管理员所有论文成果成功',
@@ -60,6 +64,10 @@ router.get('/myself', auth, async (req, res, next) => {
         path: 'newData.category',
         select: 'categoryName',
       })
+      .populate({
+        path: 'facultyName',
+        select: 'facultyName'
+      })
     res.json({
       code: 0,
       msg: '获取所有个人所有审批成功',
@@ -85,6 +93,10 @@ router.get('/detail', auth, async (req, res, next) => {
       .populate({
         path: 'newData.category',
         select: 'categoryName',
+      })
+      .populate({
+        path: 'facultyName',
+        select: 'facultyName'
       })
     res.json({
       code: 0,

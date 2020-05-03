@@ -8,6 +8,10 @@ const achievement = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'user'
   },
+  facultyName: { // 论文院系
+    type: Schema.Types.ObjectId,
+    ref: 'faculty'
+  },
   category: { // 关联类别
     type: Schema.Types.ObjectId,
     ref: 'category'
