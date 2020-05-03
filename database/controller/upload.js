@@ -23,7 +23,7 @@ router.post('/uploadFile', auth, (req, res) => {
   form.uploadDir = storeFileUrlPersonage; // 设置单文件大小
   form.maxFilesSize = 5 * 1024 * 1024; // 设置单文件大小限制 5m
   form.parse(req, function(err, fields, file){
-    // console.log(fields, file);
+    console.log('--------fields, file: ', fields, file);
     fs.rename(file.file[0].path, `${storeFileUrlPersonage}/${file.file[0].originalFilename}`, reNameErr => {
       if (reNameErr) {
         res.join({
@@ -60,6 +60,7 @@ router.post('/uploadImg', auth, (req, res) => {
   form.uploadDir = storeFileUrlPersonage; // 设置单文件大小
   form.maxFilesSize = 5 * 1024 * 1024; // 设置单文件大小限制 5m
   form.parse(req, function(err, fields, file){
+    console.log('----------------file ', file)
     let oladFilePath = file.file[0].path;
     res.json({
       code: 0,
