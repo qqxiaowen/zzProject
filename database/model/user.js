@@ -27,11 +27,6 @@ const user = new Schema({
     type: String,
     default: '普通用户'
   },
-  auditNum: {
-    type: Number,
-    default: 0
-  },
-  faculty: String,
   faculty: {
     type: mongoose.SchemaTypes.ObjectId,
     ref: 'faculty'
@@ -39,6 +34,10 @@ const user = new Schema({
   major: {
     type: mongoose.SchemaTypes.ObjectId,
     ref: 'major'
+  },
+  auditNum: {
+    type: Number,
+    default: 0
   }
 }, {
   versionKey: false,

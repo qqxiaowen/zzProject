@@ -2,6 +2,7 @@ const router = require('express').Router();
 
 const achievement = require('../model/achievement');
 const audit = require('../model/audit');
+const user = require('../model/user');
 
 const auth = require('./auth');
 const adminAuth  = require('./adminAuth');
@@ -78,6 +79,42 @@ router.get('/myself', auth, async (req, res, next) => {
   }
 })
 
+// 管理员获取已审批的论文成果
+router.get('/audited', adminAuth, async (req, res, next) => {
+  try {
+    let { pn = 1, size = 10, auditResult } = req.query;
+    pn = parseInt(pn);
+    size = parseInt(size);
+    let reqData = {};
+    if (auditResult) {
+      reqData = { auditResult }
+    }
+    let data = await audit.find({ ...reqData, approver: req.session.user._id })
+      .skip((pn - 1) * size)
+      .limit(size)
+      .sort({'updateTime': -1})
+      .populate({
+        path: 'author',
+        select: 'username userNum'
+      })
+      .populate({
+        path: 'newData.category',
+        select: 'categoryName',
+      })
+      .populate({
+        path: 'facultyName',
+        select: 'facultyName'
+      })
+    res.json({
+      code: 0,
+      msg: '获取管理员已审批的论文成果成功',
+      data,
+    })
+  } catch(err) {
+    next(err);
+  }
+})
+
 // 获取单个审批详情
 router.get('/detail', auth, async (req, res, next) => {
   try {
@@ -125,6 +162,7 @@ router.post('/', adminAuth, async (req, res, next) => {
         })
       } else {
         await audit.updateOne({ _id: id }, {$set: { auditResult, auditText, approver: req.session.user._id }})
+        await user.updateOne({ _id: req.session.user._id }, {$inc: { auditNum: 1 }}) // 审批数+1
         let resultData;
         if (auditResult === 'yes') { // 修改论文后的审批有问题
           const { title, content, category, accessoryArr } = findData.newData;

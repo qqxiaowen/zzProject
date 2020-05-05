@@ -21,7 +21,7 @@
 
   // 登录
   function login() {
-    fetch('http://localhost:3000/user/login', {
+    fetch('http://zz.mawenli.com/user/login', {
       body: JSON.stringify({
         userNum: 'admin',
         password: '123456'
@@ -56,7 +56,7 @@
     // formData.append('key', dislodgeRandomStr(file.name));
     // formData.append('token', token);
 
-    fetch('http://localhost:3000/upload/uploadFile', {
+    fetch('http://zz.mawenli.com/upload/uploadFile', {
       body: formData,
       cache: 'no-cache', // 是否缓存
       credentials: 'include', // 携带cookie

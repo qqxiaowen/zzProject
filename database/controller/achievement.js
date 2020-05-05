@@ -110,7 +110,7 @@ router.get('/detail', async (req, res, next) => {
     }
     let data = await achievement.findOne({ _id: id })
     .populate({
-      path: 'category',
+      path: 'author',
       select: 'username userNum'
     })
     .populate({

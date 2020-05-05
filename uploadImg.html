@@ -13,6 +13,26 @@
 </body>
 <script>
 
+    // 登录
+    function login() {
+        fetch('http://zz.mawenli.com/user/login', {
+        body: JSON.stringify({
+            userNum: 'admin',
+            password: '123456'
+        }),
+        headers: {
+            'content-type': 'application/json;charset=UTF-8'
+        },
+        cache: 'no-cache',
+        credentials: 'include',
+        method: 'POST'
+        })
+        .then(res => res.json())
+        .then(data => {
+        console.log(data);
+        })
+    }
+
     // 文件上传验证
     function handleBeforeUpload (file) {
         const fileSuffix = file.name.substring(file.name.lastIndexOf('.') + 1);
@@ -36,7 +56,7 @@
         var formData = new FormData();
         formData.append('file', file);
 
-        fetch('http://localhost:3000/upload/uploadImg', {
+        fetch('http://zz.mawenli.com/upload/uploadImg', {
             method: 'POST',
             cache: 'no-cache', // 是否缓存
             credentials: 'include', // 携带cookie
