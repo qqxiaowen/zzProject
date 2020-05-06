@@ -17,6 +17,7 @@ router.get('/admin', adminAuth, async (req, res, next) => {
     if (auditResult) {
       reqData = { auditResult }
     }
+    let count = await audit.count({ ...reqData })
     let data = await audit.find({ ...reqData })
       .skip((pn - 1) * size)
       .limit(size)
@@ -37,6 +38,7 @@ router.get('/admin', adminAuth, async (req, res, next) => {
       code: 0,
       msg: '获取管理员所有论文成果成功',
       data,
+      count
     })
   } catch(err) {
     next(err);
@@ -53,6 +55,7 @@ router.get('/myself', auth, async (req, res, next) => {
     if (auditResult) {
       reqData = { auditResult }
     }
+    let count = await audit.count({ ...reqData, author: req.session.user._id })
     let data = await audit.find({ ...reqData, author: req.session.user._id })
       .skip((pn - 1) * size)
       .limit(size)
@@ -73,6 +76,7 @@ router.get('/myself', auth, async (req, res, next) => {
       code: 0,
       msg: '获取所有个人所有审批成功',
       data,
+      count
     })
   } catch(err) {
     next(err);
@@ -89,6 +93,7 @@ router.get('/audited', adminAuth, async (req, res, next) => {
     if (auditResult) {
       reqData = { auditResult }
     }
+    let count = await audit.count({ ...reqData, approver: req.session.user._id })
     let data = await audit.find({ ...reqData, approver: req.session.user._id })
       .skip((pn - 1) * size)
       .limit(size)
@@ -109,6 +114,7 @@ router.get('/audited', adminAuth, async (req, res, next) => {
       code: 0,
       msg: '获取管理员已审批的论文成果成功',
       data,
+      count
     })
   } catch(err) {
     next(err);

@@ -25,6 +25,7 @@ router.get('/', async (req, res, next) => {
     if (title) {
       reqData = { ...reqData, title: new RegExp(title) }
     }
+    let count = await achievement.count({ isShow: true, ...reqData })
     let data = await achievement.find({ isShow: true, ...reqData })
       .skip((pn - 1) * size)
       .limit(size)
@@ -49,6 +50,7 @@ router.get('/', async (req, res, next) => {
       code: 0,
       msg: '获取所有论文成果成功',
       data,
+      count
     })
   } catch(err) {
     next(err);
@@ -71,6 +73,7 @@ router.get('/myself', auth, async (req, res, next) => {
     if (title) {
       reqData = { ...reqData, title: new RegExp(title) }
     }
+    let count = await achievement.count({ author: req.session.user._id, ...reqData })
     let data = await achievement.find({ author: req.session.user._id, ...reqData })
       .skip((pn - 1) * size)
       .limit(size)
@@ -95,6 +98,7 @@ router.get('/myself', auth, async (req, res, next) => {
       code: 0,
       msg: '获取个人所有论文成果成功',
       data,
+      count
     })
   } catch(err) {
     next(err);
