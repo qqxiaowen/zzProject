@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 
 const auth = require('./auth');
-const adminauth = require('./adminauth');
 const topic = require('../model/topic');
 
 // 添加一个主题

@@ -3,7 +3,6 @@ const router = express.Router();
 
 const common = require('../model/common');
 const topic = require('../model/topic');
-const adminauth = require('./adminauth');
 const auth = require('./auth');
 
 // 添加一条评论
