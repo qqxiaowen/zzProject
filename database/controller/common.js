@@ -8,11 +8,11 @@ const auth = require('./auth');
 // 添加一条评论
 router.post('/', auth, async (req, res, next) => {
   try {
-    let { content, topic_id } = req.body;
-    let topicdata = await topic.findById(topic_id) // 查找主题
-    if (topicdata) { // 如果存在这个主题
-      let commondata = await common.create({ content, topic: topic_id, user: req.session.user._id })
-      await topicdata.update({ $push: { common: commondata._id } })
+    let { content, id } = req.body;
+    let topicData = await topic.findById(id) // 查找主题
+    if (topicData) { // 如果存在这个主题
+      let commondata = await common.create({ content, topic: id, user: req.session.user._id })
+      await topicData.update({ $push: { common: commondata._id } })
       res.json({
         code: 0,
         msg: '添加评论成功',
@@ -21,7 +21,7 @@ router.post('/', auth, async (req, res, next) => {
     } else {
       res.json({
         msg: '不存在此主题',
-        topicdata
+        topicData
       })
     }
 

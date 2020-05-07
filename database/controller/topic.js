@@ -23,11 +23,15 @@ router.post('/', auth, async (req, res, next) => {
 // 获取所有的主题
 router.get('/', async (req, res, next) => {
   try {
-    let { pn = 1, size = 10 } = req.query;
+    let { pn = 1, size = 10, title } = req.query;
+    let reqData = {};
+    if (title) {
+      reqData = { title: new RegExp(title) }
+    }
     pn = parseInt(pn);
     size = parseInt(size);
-    let count = await topic.count();
-    let data = await topic.find()
+    let count = await topic.count({ ...reqData });
+    let data = await topic.find({ ...reqData })
       .limit(size)
       .skip((pn - 1) * size)
       .sort({'updateTime': -1})
@@ -43,6 +47,10 @@ router.get('/', async (req, res, next) => {
     })
 
   } catch (err) {
+    console.log('-----err: ', err)
+    res.json({
+      msg: err.ReferenceError
+    })
     next(err)
   }
 })
@@ -59,6 +67,18 @@ router.get('/detail', async (req, res, next) => {
         path: 'user',
         select: 'username userNum avatar'
       })
+      .populate({
+        path: 'common',
+        select: '-topic',
+        populate: {
+          path: 'user',
+          select: '-_id username userNum avatar'
+        }
+      })
+      // .populate({
+      //   path: 'common.user',
+      //   select: 'username userNum avatar'
+      // })
     res.json({
       code: 0,
       msg: '获取单个主题成功',
